@@ -1,0 +1,18 @@
+<h2>Show rate</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @rate.name %>
+  </li>
+
+  <li>
+    <strong>In usd:</strong>
+    <%= @rate.in_usd %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: rate_path(@conn, :edit, @rate) %>
+<%= link "Back", to: rate_path(@conn, :index) %>

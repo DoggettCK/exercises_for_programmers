@@ -1,0 +1,15 @@
+<%= form_for @conn, rate_path(@conn, :index), [as: :rate], fn f -> %>
+<div class="form-group">
+  <label for="from">Amount</label>
+  <%= text_input f, :amount, placeholder: "$100.00" %>
+</div>
+<div class="form-group">
+  <label for="from_rate">From</label>
+  <%= select f, :from, @rates, default: 152 %>
+  <label for="to_rate">To</label>
+  <%= select f, :to, @rates, default: 48 %>
+</div>
+<div class="form-group">
+  <%= submit "Calculate", class: "btn btn-primary" %>
+</div>
+<%= end %>
