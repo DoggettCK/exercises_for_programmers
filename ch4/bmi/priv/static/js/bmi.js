@@ -52,7 +52,7 @@ var UpdateHeight = function() {
   var big = Math.floor(heightVal / mod);
   var small = Math.floor(heightVal % mod);
 
-  $("#heightVal").text(big + ' ' + bigUnit + ', ' + small + ' ' + smallUnit);
+  $("#heightVal").text([big, bigUnit, small, smallUnit].join(' '));
 };
 
 var weight = $("#weight").slider({
