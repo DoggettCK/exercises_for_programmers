@@ -4,6 +4,9 @@ defmodule Bmi.BMIController do
   @invalid_bmi %{bmi: nil, status: :invalid}
 
   def bmi(conn, %{"weight" => weight, "height" => height, "style" => style}) do
+    {weight, _} = Integer.parse(weight)
+    {height, _} = Integer.parse(height)
+    
     bmi = calculate_bmi(weight, height, style)
     render(conn, "bmi.json", bmi: bmi)
   end
@@ -35,7 +38,7 @@ defmodule Bmi.BMIController do
     cond do
       bmi < 18.5 -> %{bmi: bmi, status: :underweight}
       bmi > 25 -> %{bmi: bmi, status: :overweight}
-      true -> @invalid_bmi
+      true -> %{bmi: bmi, status: :ideal}
     end
   end
 end
