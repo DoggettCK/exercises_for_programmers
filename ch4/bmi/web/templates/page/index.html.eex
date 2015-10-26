@@ -1,36 +1,130 @@
 <div class="jumbotron">
-  <h2>Welcome to Phoenix!</h2>
-  <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
-</div>
-
-<div class="row marketing">
-  <div class="col-lg-6">
-    <h4>Resources</h4>
-    <ul>
-      <li>
-        <a href="http://phoenixframework.org/docs/overview">Guides</a>
-      </li>
-      <li>
-        <a href="http://hexdocs.pm/phoenix">Docs</a>
-      </li>
-      <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
-      </li>
-    </ul>
+  <h2>BMI Calculator</h2>
+  <div class="row">
+    <input type="radio" name="style" value="imperial" checked="checked">Imperial
+    <input type="radio" name="style" value="metric">Metric
   </div>
-
-  <div class="col-lg-6">
-    <h4>Help</h4>
-    <ul>
-      <li>
-        <a href="http://groups.google.com/group/phoenix-talk">Mailing list</a>
-      </li>
-      <li>
-        <a href="http://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on freenode IRC</a>
-      </li>
-      <li>
-        <a href="https://twitter.com/elixirphoenix">@elixirphoenix</a>
-      </li>
-    </ul>
+  
+  <div class="row">
+    <input id="weight" type="text"/>
+    <span id="weightLabel">Weight: <span id="weightVal">180</span></span>
+  </div>
+  <div class="row">
+    <input id="height" type="text"/>
+    <span id="heightLabel">Height: <span id="heightVal">72</span></span>
+  </div>
+  <div class="row">
+    <p id="bmi"></p>
   </div>
 </div>
+
+<script>
+var CalculateBMI = function() {
+  $.post("/api/bmi", {
+    weight: weight.getValue(),
+    height: height.getValue(),
+    style: $("input[name=style]:checked").val()
+  }, function(bmi_data) {
+    var status = bmi_data['status'];
+    var bmi = bmi_data['bmi'];
+
+    var outcome = "You are within the ideal weight range.";
+    var color = "#88ff88";
+
+    switch (status) {
+      case "underweight":
+      case "overweight": 
+        outcome = "You are " + status + ". You should see your doctor.";
+        color = "#ff8888";
+        break;
+    }
+
+    $("#bmi")
+      .html("Your BMI is " + bmi.toFixed(2) + ".<br/>" + outcome)
+      .css("background-color", color);
+  });
+};
+
+var UpdateWeight = function() {
+  var weightVal = weight.getValue();
+
+  var unit = 'pounds';
+
+  if ('metric' === $("input[name=style]:checked").val()) {
+    unit = 'kilograms';
+  }
+
+  $("#weightVal").text(weightVal + ' ' + unit);
+};
+
+var UpdateHeight = function() {
+  var heightVal = height.getValue();
+  
+  var bigUnit = "ft";
+  var smallUnit = "in";
+  var mod = 12;
+
+  if ('metric' === $("input[name=style]:checked").val()) {
+    bigUnit = "m";
+    smallUnit = "cm";
+    mod = 100;
+  }
+
+  var big = Math.floor(heightVal / mod);
+  var small = Math.floor(heightVal % mod);
+
+  $("#heightVal").text(big + ' ' + bigUnit + ', ' + small + ' ' + smallUnit);
+};
+
+var weight = $("#weight").slider({
+  min: 0,
+  max: 1000,
+  value: 180,
+  tooltip: 'hide'})
+.on("change", CalculateBMI)
+.on("change", UpdateWeight)
+.data('slider');
+
+var height = $("#height").slider({
+  min: 0,
+  max: 120,
+  value: 72,
+  tooltip: 'hide'})
+.on("change", CalculateBMI)
+.on("change", UpdateHeight)
+.data('slider');
+
+$("input[type=radio][name=style]").change(function() {
+  var currentWeight = $("#weight").slider("getValue");
+  var currentHeight = $("#height").slider("getValue");
+
+  if (this.value === 'imperial') {
+    $("#weight")
+      .slider('setAttribute', 'max', 1000)
+      .slider("setAttribute", "value", currentWeight / 0.45359)
+      .slider('refresh');
+    $("#height")
+      .slider('setAttribute', 'max', 120)
+      .slider("setAttribute", "value", currentHeight / 2.54)
+      .slider('refresh');
+  } else {
+    $("#weight")
+      .slider('setAttribute', 'max', 453)
+      .slider("setAttribute", "value", currentWeight * 0.45359)
+      .slider('refresh');
+    $("#height")
+      .slider('setAttribute', 'max', 305)
+      .slider("setAttribute", "value", currentHeight * 2.54)
+      .slider('refresh');
+  }
+
+  UpdateWeight();
+  UpdateHeight();
+});
+
+CalculateBMI();
+UpdateWeight();
+UpdateHeight();
+
+</script>
+
