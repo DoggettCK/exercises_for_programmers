@@ -10,6 +10,7 @@
     <title>BMI Calculator</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/bootstrap-slider.css") %>">
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/bmi.css") %>">
     <script src="<%= static_path(@conn, "/js/jquery-2.1.4.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/bootstrap-slider.js") %>"></script>
   </head>

@@ -1,17 +1,18 @@
 <div class="jumbotron">
   <h2>BMI Calculator</h2>
-  <div class="row">
-    <input type="radio" name="style" value="imperial" checked="checked">Imperial
-    <input type="radio" name="style" value="metric">Metric
+  <div class="row units">
+    <label for="style">Units</label>
+    <input type="radio" name="style" value="imperial" checked="checked"><label for="style">Imperial</label>
+    <input type="radio" name="style" value="metric"><label for="style">Metric</label>
   </div>
 
   <div class="row">
     <input id="weight" type="text"/>
-    <span id="weightLabel">Weight: <span id="weightVal">180</span></span>
+    <h3>Weight: <span id="weightVal">180</span></h3>
   </div>
   <div class="row">
     <input id="height" type="text"/>
-    <span id="heightLabel">Height: <span id="heightVal">72</span></span>
+    <h3>Height: <span id="heightVal">72</span></h3>
   </div>
   <div class="row">
     <p id="bmi"></p>
