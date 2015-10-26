@@ -3,6 +3,5 @@ defmodule Bmi.BMIView do
 
   def render("bmi.json", %{bmi: bmi}) do
     bmi
-    #%{id: bmi.id}
   end
 end
