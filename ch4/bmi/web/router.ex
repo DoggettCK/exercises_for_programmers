@@ -16,6 +16,6 @@ defmodule Bmi.Router do
   scope "/api", Bmi do
     pipe_through :api
 
-    get "/bmi", BMIController, :bmi
+    post "/bmi", BMIController, :bmi
   end
 end
