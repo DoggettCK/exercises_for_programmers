@@ -13,6 +13,12 @@ defmodule Bmi.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/", Bmi do
+    pipe_through :browser
+
+    get "/", PageController, :index
+  end
+
   scope "/api", Bmi do
     pipe_through :api
 
