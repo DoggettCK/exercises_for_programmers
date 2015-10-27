@@ -65,7 +65,7 @@ var weight = $("#weight").slider({
 .data('slider');
 
 var height = $("#height").slider({
-  min: 0,
+  min: 1,
   max: 120,
   value: 72,
   tooltip: 'hide'})
