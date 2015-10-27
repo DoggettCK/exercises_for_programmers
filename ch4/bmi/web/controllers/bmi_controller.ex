@@ -7,7 +7,7 @@ defmodule Bmi.BMIController do
     {weight, _} = Integer.parse(weight)
     {height, _} = Integer.parse(height)
     
-    conn |> bmi(%{"weight": weight, "height": height, "style": style})
+    conn |> bmi(%{"weight" => weight, "height" => height, "style" => style})
   end
 
   def bmi(conn, %{"weight" => weight, "height" => height, "style" => style}) do
