@@ -3,10 +3,15 @@ defmodule Bmi.BMIController do
 
   @invalid_bmi %{bmi: nil, status: :invalid}
 
-  def bmi(conn, %{"weight" => weight, "height" => height, "style" => style}) do
+  def bmi(conn, %{"weight" => weight, "height" => height, "style" => style}) when is_binary(weight) and is_binary(height) do
     {weight, _} = Integer.parse(weight)
     {height, _} = Integer.parse(height)
     
+    bmi = calculate_bmi(weight, height, style)
+    render(conn, "bmi.json", bmi: bmi)
+  end
+
+  def bmi(conn, %{"weight" => weight, "height" => height, "style" => style}) do
     bmi = calculate_bmi(weight, height, style)
     render(conn, "bmi.json", bmi: bmi)
   end
