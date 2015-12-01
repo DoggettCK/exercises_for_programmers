@@ -5,15 +5,19 @@ defmodule Anagram do
     one = (IO.gets "Enter the first string: ") |> String.strip
     two = (IO.gets "Enter the second string: ") |> String.strip
 
-    if anagram?(one, two) do
-      IO.puts "\"#{one}\" and \"#{two}\" are anagrams."
-    else
-      IO.puts "\"#{one}\" and \"#{two}\" are not anagrams."
-    end
+    IO.puts display(one, two, anagram?(one, two))
   end
 
   def anagram?(one, two) do
     clean(one) == clean(two)
+  end
+
+  defp display(one, two, true) do
+    "\"#{one}\" and \"#{two}\" are anagrams."
+  end
+
+  defp display(one, two, _) do
+    "\"#{one}\" and \"#{two}\" are not anagrams."
   end
 
   defp clean(s) when is_binary(s) do
