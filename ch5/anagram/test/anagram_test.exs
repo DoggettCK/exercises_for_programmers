@@ -34,9 +34,7 @@ defmodule AnagramTest do
     [one, two, match] = line
 
     test "test_#{index}" do
-      {match, []} = Code.eval_string(unquote(match))
-
-      case match do
+      case unquote(match) do
         true -> assert Anagram.anagram? unquote(one), unquote(two)
         _ -> refute Anagram.anagram? unquote(one), unquote(two)
       end
