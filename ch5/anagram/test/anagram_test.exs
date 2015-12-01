@@ -2,41 +2,44 @@ defmodule AnagramTest do
   use ExUnit.Case
   doctest Anagram
 
-  test "known anagrams" do
-    assert Anagram.anagram? "Clint Eastwood", "Old West Action"
-    assert Anagram.anagram? "parliament", "partial men"
-    assert Anagram.anagram? "note", "tone"
-    assert Anagram.anagram? "Resistance", "Ancestries"
-    assert Anagram.anagram? "Gainly", "Laying"
-    assert Anagram.anagram? "Admirer", "Married"
-    assert Anagram.anagram? "Sadder", "Dreads"
-    assert Anagram.anagram? "protectional", "Lactoprotein"
-    assert Anagram.anagram? "Orchestra", "Carthorse"
-    assert Anagram.anagram? "Creative", "Reactive"
-    assert Anagram.anagram? "Deductions", "Discounted"
-    assert Anagram.anagram? "Listen", "Silent"
-    assert Anagram.anagram? "Replays", "Parsley"
-    assert Anagram.anagram? "Crudities", "Diuretics"
-    assert Anagram.anagram? "Paternal", "Parental"
-    assert Anagram.anagram? "Angered", "Enraged"
-    assert Anagram.anagram? "discriminator", "Doctrinairism"
-    assert Anagram.anagram? "Serbia", "Rabies"
+  tests = [
+    ["1note", "tone1", true],
+    ["Admirer", "Married", true],
+    ["Angered", "Enraged", true],
+    ["Clint Eastwood", "Old West Action", true],
+    ["Creative", "Reactive", true],
+    ["Crudities", "Diuretics", true],
+    ["Deductions", "Discounted", true],
+    ["discriminator", "Doctrinairism", true],
+    ["elixir", "Erlang", false],
+    ["Gainly", "Laying", true],
+    ["Listen", "Silent", true],
+    ["note", "stone", false],
+    ["note", "tone", true],
+    ["note", "tone1", false],
+    ["note$$!*#", "tone", true],
+    ["note_1", "_note1", true],
+    ["note_1", "note1", false],
+    ["Orchestra", "Carthorse", true],
+    ["Paternal", "Parental", true],
+    ["protectional", "Lactoprotein", true],
+    ["Replays", "Parsley", true],
+    ["Resistance", "Ancestries", true],
+    ["Sadder", "Dreads", true],
+    ["Serbia", "Rabies", true],
+    ["To be or not to be: that is the question; whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune...", "In one of the Bard's best-thought-of tragedies our insistent hero, Hamlet, queries on two fronts about how life turns rotten.", true]
+  ]
 
-    refute Anagram.anagram? "note", "stone"
-    refute Anagram.anagram? "elixir", "Erlang"
-    
-    # Numbers count
-    refute Anagram.anagram? "note", "tone1"
-    assert Anagram.anagram? "1note", "tone1"
+  for {line, index} <- (tests |> Enum.with_index) do
+    [one, two, match] = line
 
-    # Symbols don't count
-    assert Anagram.anagram? "note$$!*#", "tone"
+    test "test_#{index}" do
+      {match, []} = Code.eval_string(unquote(match))
 
-    
-    # Longer ones
-    assert Anagram.anagram? \
-      "To be or not to be: that is the question; whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune...",
-      "In one of the Bard's best-thought-of tragedies our insistent hero, Hamlet, queries on two fronts about how life turns rotten."
-    
+      case match do
+        true -> assert Anagram.anagram? unquote(one), unquote(two)
+        _ -> refute Anagram.anagram? unquote(one), unquote(two)
+      end
+    end
   end
 end
