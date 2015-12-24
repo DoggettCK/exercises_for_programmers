@@ -4,6 +4,7 @@
 /deps
 /*.ez
 /*.beam
+/*.mp3
 
 # Generate on crash by the VM
 erl_crash.dump

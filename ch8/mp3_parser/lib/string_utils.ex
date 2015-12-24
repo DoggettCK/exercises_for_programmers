@@ -12,12 +12,20 @@ defmodule StringUtils do
     null_terminated_string(rest, s <> <<c>>) 
   end
 
-  ### Null-stripping
-
-  def clean_string(s) when is_binary(s) do
-    s |> String.chunk(:printable) |> Enum.filter(&String.printable?/1) |> first_string
+  def decode_string(<< 0, str::binary >>) do
+    str |> String.split(<<0>>) |> hd # Remove trailling null if necessary
   end
 
-  defp first_string([]), do: ""
-  defp first_string([head | _tail]), do: head
+  def decode_string(<< 1, 0xFF, 0xFE, str::binary >>) do
+    read_utf8_string(str)
+  end
+
+  def decode_string(<< 1, 0xFE, 0xFF, str::binary >>) do
+    read_utf8_string(str)
+  end
+
+
+  def read_utf8_string(str) do
+    str |> String.graphemes |> Enum.reject(&(&1 == <<0>>)) |> to_string
+  end
 end
