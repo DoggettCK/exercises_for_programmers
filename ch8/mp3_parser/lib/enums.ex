@@ -21,6 +21,7 @@ defmodule Enums do
   def picture_type(0x12), do: "Illustration"
   def picture_type(0x13), do: "Band/artist logotype"
   def picture_type(0x14), do: "Publisher/Studio logotype"
+  def picture_type(_), do: "Unknown picture type"
 
   ### Encoding
   def encoding(0), do: "ISO-8859-1"

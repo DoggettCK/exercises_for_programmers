@@ -24,6 +24,10 @@ defmodule StringUtils do
     read_utf8_string(str)
   end
 
+  def decode_string(<< 3, str::binary >>) do
+    str |> read_utf8_string
+  end
+
 
   def read_utf8_string(str) do
     str |> String.graphemes |> Enum.reject(&(&1 == <<0>>)) |> to_string

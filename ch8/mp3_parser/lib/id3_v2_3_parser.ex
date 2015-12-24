@@ -94,7 +94,7 @@ defmodule ID3_v2_3_Parser do
 
     << picture_type::unsigned-integer-size(8), remaining_data::binary >> = remaining_data
 
-    {description, remaining_data} = StringUtils.read_null_terminated_string(remaining_data)
+    {description, _remaining_data} = StringUtils.read_null_terminated_string(remaining_data)
 
     # TODO: Do something with remaining_data (base64 it into JSON)
     %{}
@@ -105,7 +105,7 @@ defmodule ID3_v2_3_Parser do
   end
 
   ### Comment frame parsing
-  defp parse_comment_frame(<< 0, language::binary-size(3), comment_data::binary >> = frame_data) do
+  defp parse_comment_frame(<< 0, language::binary-size(3), comment_data::binary >>) do
     [short_description, actual_text | _] = comment_data |> String.split(<<0>>)
 
     %{}
@@ -115,7 +115,7 @@ defmodule ID3_v2_3_Parser do
     |> Dict.put("text", actual_text)
   end
 
-  defp parse_comment_frame(<< 1, language::binary-size(3), comment_data::binary >> = frame_data) do
+  defp parse_comment_frame(<< 1, language::binary-size(3), comment_data::binary >>) do
     # Reattach the encoding so the decoder can parse them correctly
     [short_description, actual_text | _] = comment_data 
                                             |> String.split(<<0, 0>>)
