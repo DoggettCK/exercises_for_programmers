@@ -1,9 +1,10 @@
 <div class="jumbotron">
   <h2>MP3 ID3 Tag Parser</h2>
   <p class="lead">Upload an MP3 to see what information we can find.</p>
-  <%= form_for @conn, "/api/upload", [as: :upload, class: "dropzone needsclick dz-clickable"], fn f -> %>
+  <%= form_for @conn, "/api/upload", [as: :upload, id: "mp3-dropzone", class: "dropzone needsclick dz-clickable"], fn f -> %>
     <div class="dz-message needsclick">
       Drop files here or click to upload.
     </div>
   <% end %>
+  <div id="mp3_info"></div>
 </div>
