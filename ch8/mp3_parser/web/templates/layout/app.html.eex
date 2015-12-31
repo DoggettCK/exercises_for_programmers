@@ -32,7 +32,8 @@ Dropzone.options.mp3Dropzone = {
     else { done("Invalid file type. MP3s only!"); }
   },
   success: function(file, response) {
-    $("#mp3_info").html(prettyPrint(response));
+    $("#mp3_info").empty();
+    listify($("#mp3_info"), response);
   },
   removedfile: function(file) {
     $("#mp3_info").empty();

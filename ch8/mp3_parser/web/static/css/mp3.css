@@ -1,0 +1,14 @@
+#mp3_info {
+  text-align: left;
+}
+
+
+#mp3_info ul {
+  margin: 0;
+}
+
+#mp3_info li {
+  margin: 0 0 0 -1em;
+  list-style-type: none;
+}
+
