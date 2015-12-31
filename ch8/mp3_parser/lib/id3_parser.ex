@@ -25,14 +25,14 @@ defmodule ID3Parser do
   end
 
   def parse(2, id3_tag) do
-    ID3_v2_2_Parser.parse_frame(%{}, id3_tag)
+    ID3_v2_2_Parser.parse_frame(%{} |> Dict.put("id3_version", 2), id3_tag)
   end
 
   def parse(3, id3_tag) do
-    ID3_v2_3_Parser.parse_frame(%{}, id3_tag)
+    ID3_v2_3_Parser.parse_frame(%{} |> Dict.put("id3_version", 3), id3_tag)
   end
 
   def parse(4, id3_tag) do
-    ID3_v2_4_Parser.parse_frame(%{}, id3_tag)
+    ID3_v2_4_Parser.parse_frame(%{} |> Dict.put("id3_version", 4), id3_tag)
   end
 end
