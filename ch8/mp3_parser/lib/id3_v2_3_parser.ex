@@ -94,14 +94,14 @@ defmodule ID3_v2_3_Parser do
 
     << picture_type::unsigned-integer-size(8), remaining_data::binary >> = remaining_data
 
-    {description, _remaining_data} = StringUtils.read_null_terminated_string(remaining_data)
+    {description, picture_data} = StringUtils.read_null_terminated_string(remaining_data)
 
-    # TODO: Do something with remaining_data (base64 it into JSON)
     %{}
     |> Dict.put("encoding", Enums.encoding(frame_encoding))
     |> Dict.put("mime_type", mime_type)
     |> Dict.put("picture_type", Enums.picture_type(picture_type))
     |> Dict.put("picture_description", description)
+    |> Dict.put("image", "data:#{mime_type};base64,#{:base64.encode(picture_data)}")
   end
 
   ### Comment frame parsing

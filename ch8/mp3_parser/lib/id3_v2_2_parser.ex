@@ -115,14 +115,14 @@ defmodule ID3_v2_2_Parser do
 
   ### APIC frame parsing
   defp parse_picture_frame(<<0, image_format::binary-size(3), picture_type::unsigned-integer-size(8), remaining_data::binary>> = frame_data) do
-    [description, remaining_data] = remaining_data |> String.split(<<0>>, parts: 2)
+    [description, picture_data] = remaining_data |> String.split(<<0>>, parts: 2)
 
-    # TODO: Do something with remaining_data (base64 it into JSON)
     %{}
     |> Dict.put("encoding", "ISO-8859-1")
     |> Dict.put("image_format", image_format)
     |> Dict.put("picture_type", Enums.picture_type(picture_type))
     |> Dict.put("picture_description", description)
+    |> Dict.put("image", "data:image/#{image_format |> String.downcase};base64,#{:base64.encode(picture_data)}")
   end
 
   ### Comment frame parsing
