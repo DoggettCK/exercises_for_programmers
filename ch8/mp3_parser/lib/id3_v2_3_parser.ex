@@ -1,57 +1,16 @@
 defmodule ID3_v2_3_Parser do
-  def parse_frame(data_dict, << "TALB", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
+  use Macros.ID3_v2_3
 
-    parse_frame(data_dict |> Dict.put("album", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
+  integer_frame "TBPM", "beats_per_minute"
+  integer_frame "TYER", "year"
 
-  def parse_frame(data_dict, << "TCON", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("content_type", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TYER", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("year", frame_data |> StringUtils.decode_string |> String.to_integer), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TIT2", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("title", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TPE1", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("lead_performer", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TPE2", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("band", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TBPM", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("beats_per_minute", frame_data |> StringUtils.decode_string |> String.to_integer), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TSSE", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("encoding_settings", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
-
-  def parse_frame(data_dict, << "TRCK", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-    << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
-
-    parse_frame(data_dict |> Dict.put("track_number", frame_data |> StringUtils.decode_string), remaining_frame_data)
-  end
+  text_frame "TALB", "album"
+  text_frame "TCON", "content_type"
+  text_frame "TIT2", "title"
+  text_frame "TPE1", "lead_performer"
+  text_frame "TPE2", "band"
+  text_frame "TRCK", "track_number"
+  text_frame "TSSE", "encoding_settings"
 
   def parse_frame(data_dict, << "COMM", size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
     << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data

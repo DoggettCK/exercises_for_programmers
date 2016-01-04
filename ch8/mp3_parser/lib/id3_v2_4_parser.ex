@@ -456,7 +456,11 @@ defmodule ID3_v2_4_Parser do
     |> Dict.put("picture_type", Enums.picture_type(picture_type))
     |> Dict.put("description", (<<frame_encoding>> <> description) |> StringUtils.decode_string)
     |> Dict.put("mime_type", mime_type)
-    |> Dict.put("image", "data:#{mime_type};base64,#{:base64.encode(picture_data)}")
+    |> Dict.put("image", image_data_url(mime_type, picture_data))
+  end
+
+  defp image_data_url(mime_type, picture_data) do
+    "data:#{mime_type};base64,#{:base64.encode(picture_data)}"
   end
 
   ### Comment frame parsing
