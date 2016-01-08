@@ -1,10 +1,31 @@
+<script>
+Dropzone.options.mp3Dropzone = {
+  maxFilesize: 100, // MB
+  addRemoveLinks: true,
+  accept: function(file, done) {
+    if (file.type.match(/audio\/mp3/)) {
+      done();
+    }
+    else { done("Invalid file type. MP3s only!"); }
+  },
+  success: function(file, response) {
+    $("#mp3_info").empty();
+    listify($("#mp3_info"), response);
+  },
+  removedfile: function(file) {
+    $("#mp3_info").empty();
+
+    file.previewElement.parentNode.removeChild(file.previewElement);
+  }
+};
+</script>
 <div class="jumbotron">
   <h2>MP3 ID3 Tag Parser</h2>
   <p class="lead">Upload an MP3 to see what information we can find.</p>
   <%= form_for @conn, "/api/upload", [as: :upload, id: "mp3-dropzone", class: "dropzone needsclick dz-clickable"], fn f -> %>
-    <div class="dz-message needsclick">
-      Drop files here or click to upload.
-    </div>
+  <div class="dz-message needsclick">
+    Drop files here or click to upload.
+  </div>
   <% end %>
   <div id="mp3_info"></div>
 </div>

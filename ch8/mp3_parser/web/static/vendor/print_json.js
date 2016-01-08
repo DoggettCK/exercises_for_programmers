@@ -6,7 +6,12 @@ function listify (node, obj) {
     $.each(obj, function(x) { listify(ul, obj[x]); });
   } else {
     $.each(obj, function(k, v) {
-      if (typeof(v) === 'string' || v instanceof String || typeof(v) === 'number' || v instanceof Number) {
+      if (typeof(v) === 'string' || 
+          typeof(v) === 'number' ||
+          typeof(v) === 'boolean' ||
+          v instanceof Number ||
+          v instanceof String || 
+          v instanceof Boolean) {
         if (k === 'image') {
           ul.append(
               $("<li>")

@@ -12,6 +12,8 @@ defmodule StringUtils do
     null_terminated_string(rest, s <> <<c>>) 
   end
 
+  # TODO: Rewrite these to use :unicode.characters_to_binary({:utf16, :big}, :utf8}, depending on input/output encoding
+  def decode_string(<<>>), do: ""
   def decode_string(<< 0, str::binary >>) do
     str |> String.split(<<0>>) |> hd # Remove trailling null if necessary
   end

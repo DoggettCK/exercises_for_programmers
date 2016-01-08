@@ -9,6 +9,8 @@
 
     <title>ID3 Tag Parser</title>
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </head>
 
   <body>
@@ -19,30 +21,5 @@
       <%= @inner %>
 
     </div> <!-- /container -->
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script>
-Dropzone.options.mp3Dropzone = {
-  maxFilesize: 100, // MB
-  addRemoveLinks: true,
-  accept: function(file, done) {
-    if (file.type.match(/audio\/mp3/)) {
-      done();
-    }
-    else { done("Invalid file type. MP3s only!"); }
-  },
-  success: function(file, response) {
-    $("#mp3_info").empty();
-    listify($("#mp3_info"), response);
-  },
-  removedfile: function(file) {
-    $("#mp3_info").empty();
-
-    file.previewElement.parentNode.removeChild(file.previewElement);
-  }
-};
-
-
-  </script>
   </body>
 </html>

@@ -1,0 +1,26 @@
+<script>
+Dropzone.options.gpdDropzone = {
+  maxFilesize: 100, // MB
+  addRemoveLinks: true,
+  success: function(file, response) {
+    $("#gpd_info").empty();
+
+    parse_gpd_response($("#gpd_info"), response);
+  },
+  removedfile: function(file) {
+    $("#gpd_info").empty();
+
+    file.previewElement.parentNode.removeChild(file.previewElement);
+  }
+};
+</script>
+<div class="jumbotron">
+  <h2>XBox 360 GPD Parser</h2>
+  <p class="lead">Upload a GPD to see what information we can find.</p>
+  <%= form_for @conn, "/api/gpd_upload", [as: :upload, id: "gpd-dropzone", class: "dropzone needsclick dz-clickable"], fn _f -> %>
+    <div class="dz-message needsclick">
+      Drop files here or click to upload.
+    </div>
+  <% end %>
+</div>
+<div id="gpd_info"></div>

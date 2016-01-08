@@ -4,4 +4,8 @@ defmodule Mp3Parser.PageController do
   def index(conn, _params) do
     render conn, "index.html"
   end
+
+  def gpd(conn, _params) do
+    render conn, "gpd.html"
+  end
 end

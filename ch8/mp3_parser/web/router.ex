@@ -17,6 +17,7 @@ defmodule Mp3Parser.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/gpd", PageController, :gpd
   end
 
   # Other scopes may use custom stacks.
@@ -24,5 +25,6 @@ defmodule Mp3Parser.Router do
      pipe_through :api
 
      post "/upload", Mp3Controller, :upload
+     post "/gpd_upload", GpdController, :upload
    end
 end

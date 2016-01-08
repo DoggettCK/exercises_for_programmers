@@ -1,14 +1,58 @@
-#mp3_info {
+#mp3_info, #gpd_info {
   text-align: left;
 }
 
 
-#mp3_info ul {
+#mp3_info ul, #gpd_info ul {
   margin: 0;
 }
 
-#mp3_info li {
+#mp3_info li, #gpd_info li {
   margin: 0 0 0 -1em;
   list-style-type: none;
 }
 
+h2#title {
+  text-align: center;
+  width: 100%;
+}
+
+div.locked {
+  background-color: #faa;
+}
+
+div.unlocked {
+  background-color: #afa;
+}
+
+div.achievement {
+  float: left;
+  width: 100%;
+  padding: 0.5em;
+  margin: 0.25em;
+  -webkit-border-radius: 10px;
+}
+
+div.achievement img {
+  float: left;
+  margin: 1em;
+}
+
+h4.name {
+  float: left;
+}
+
+h4.gamerscore {
+  float: right;
+  clear: right;
+}
+
+span.description {
+  width: 80%;
+  clear: right;
+  float: left;
+}
+
+span.unlocked_at {
+  float: left;
+}
