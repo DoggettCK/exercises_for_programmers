@@ -2,6 +2,8 @@ defmodule GpdParser do
   def parse(file_name) do
     case File.read(file_name) do
       {:ok, gpd} ->
+
+        # http://www.free60.org/wiki/GPD
         << "XDBF",
         _version::unsigned-integer-size(32),
         entry_table_length::unsigned-integer-size(32),

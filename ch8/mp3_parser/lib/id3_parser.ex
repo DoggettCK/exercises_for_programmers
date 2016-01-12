@@ -25,14 +25,17 @@ defmodule ID3Parser do
   end
 
   def parse(2, id3_tag) do
+    # http://id3.org/id3v2-00
     ID3_v2_2_Parser.parse_frame(%{} |> Dict.put("id3_version", 2), id3_tag)
   end
 
   def parse(3, id3_tag) do
+    # http://id3.org/id3v2.3.0
     ID3_v2_3_Parser.parse_frame(%{} |> Dict.put("id3_version", 3), id3_tag)
   end
 
   def parse(4, id3_tag) do
+    # http://id3.org/id3v2.4.0-frames
     ID3_v2_4_Parser.parse_frame(%{} |> Dict.put("id3_version", 4), id3_tag)
   end
 end
