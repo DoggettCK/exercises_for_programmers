@@ -32,6 +32,7 @@ defmodule GpdParser do
 
         achievements = parsed_entries
                         |> Enum.filter_map(fn {key, _} -> key == :achievement end, fn {_, value} -> value end)
+                        |> Enum.sort(fn d1, d2 -> d2.unlocked_at <= d1.unlocked_at end)
 
         settings = parsed_entries
                     |> Enum.filter_map(fn {key, _} -> key == :setting end, fn {_, value} -> value end)
