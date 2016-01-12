@@ -11,8 +11,8 @@ function parse_gpd_response (node, gpd_json) {
   var gpd = gpd_json.gpd;
 
   var title_div = $("<h2>").attr({"id": "title"}).text(gpd.title);
-  var achievement_count = $("<h3>").text("Achievements Earned: " + gpd.settings.achievements_earned);
-  var total_gs = $("<h3>").text("Gamerscore Earned: " + gpd.settings.gamerscore_earned);
+  var achievement_count = $("<h3>").text("Achievements Earned: " + (gpd.settings.achievements_earned || 0));
+  var total_gs = $("<h3>").text("Gamerscore Earned: " + (gpd.settings.gamerscore_earned || 0));
 
   $(node).append(title_div, achievement_count, total_gs);
   $.each(gpd.achievements, function(i, ach) { $(node).append(build_achievement_node(gpd_id, ach)); })
@@ -42,6 +42,9 @@ function unlock_date (unlocked_at, flags) {
 }
 
 function filetime_as_string (ft) {
-  var d = new Date(ft / 100000);
-  return moment(d).format("dddd MMMM Do YYYY, hh:mm:ss.SSS A");
+  var s = "" + ft;
+  var ts = +s.substring(0, s.length-4);
+  var fsOffset = Date.UTC(1601, 0, 1);
+  var d = new Date(fsOffset + ts);
+  return moment(d).format("dddd MMMM Do YYYY, hh:mm:ss.SSS A z");
 }
