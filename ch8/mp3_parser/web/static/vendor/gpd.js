@@ -11,8 +11,10 @@ function parse_gpd_response (node, gpd_json) {
   var gpd = gpd_json.gpd;
 
   var title_div = $("<h2>").attr({"id": "title"}).text(gpd.title);
+  var achievement_count = $("<h3>").text("Achievements Earned: " + gpd.settings.achievements_earned);
+  var total_gs = $("<h3>").text("Gamerscore Earned: " + gpd.settings.gamerscore_earned);
 
-  $(node).append(title_div);
+  $(node).append(title_div, achievement_count, total_gs);
   $.each(gpd.achievements, function(i, ach) { $(node).append(build_achievement_node(gpd_id, ach)); })
 }
 

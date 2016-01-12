@@ -12,7 +12,7 @@
   list-style-type: none;
 }
 
-h2#title {
+#gpd_info h2, #gpd_info h3 {
   text-align: center;
   width: 100%;
 }
