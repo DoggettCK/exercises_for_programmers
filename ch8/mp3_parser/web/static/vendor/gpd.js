@@ -41,16 +41,7 @@ function unlock_date (unlocked_at, flags) {
   }
 }
 
-function filetime_to_unixtime (ft) {
-  // TODO: This is stripping milliseconds, needs debugging
-  epoch_diff = 116444736000000000;
-  rate_diff = 10000000;
-  return parseInt((ft - epoch_diff)/rate_diff);
-}
-
 function filetime_as_string (ft) {
-  var ut = filetime_to_unixtime(ft);
-  var d = new Date(ut * 1000);
-  //return d.toLocaleString();
-  return moment(d).format("dddd MMMM Do YYYY, hh:mm:ss.SSS");
+  var d = new Date(ft / 100000);
+  return moment(d).format("dddd MMMM Do YYYY, hh:mm:ss.SSS A");
 }
