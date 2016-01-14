@@ -1,4 +1,6 @@
 defmodule GpdEnums do
+  use Bitwise
+
   for {val, desc} <- %{
     0x100000000 => "Sync List", 
     0x10040002 => "Gamer Yaxis Inversion", 
@@ -57,4 +59,33 @@ defmodule GpdEnums do
   end
 
   def achievement_type(_), do: "Unknown achievement type"
+
+  @flags %{
+    0x8 => :secret,
+    0x10000 => :earned_online,
+    0x20000 => :earned,
+    0x100000 => :edited,
+    0x200000 => :system_gfwl_wp8,
+    0x400000 => :system_ios_android_win8
+  }
+
+  @doc """
+  Returns a list of all achievement flags
+  """
+  def flags, do: @flags |> Dict.values
+
+  for {flag, flag_name } <- @flags do
+    @doc """
+    Determines if a flag is set on an integer, specified by an atom from `GpdEnums.flags`
+
+    Returns: `true` or `false`
+    """
+    def flag_set?(flags, unquote(flag_name)) when is_integer(flags), do: (flags &&& unquote(flag)) == unquote(flag)
+
+    @doc """
+    Set or unset a flag on an integer, specified by an atom from `GpdEnums.flags`
+    """
+    def set_flag(flags, unquote(flag_name), 0), do: flags &&& bnot(unquote(flag))
+    def set_flag(flags, unquote(flag_name), 1), do: flags ||| unquote(flag)
+  end
 end

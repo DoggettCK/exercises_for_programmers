@@ -20,7 +20,7 @@ function parse_gpd_response (node, gpd_json) {
 
 function build_achievement_node (gpd_id, achievement) {
   var img = $("<img>").attr({"src": xbl_image_url(gpd_id, achievement.image_id)});
-  var name = $("<h4>").addClass("name").text(achievement.name);
+  var name = $("<h4>").addClass("name").text(achievement.name + (achievement.flags.secret ? " (SECRET)" : ""));
   var gamerscore = $("<h4>").addClass("gamerscore").text(achievement.gamerscore + "GS");
   var desc = $("<span>").addClass("description").text(achievement.flags.earned ? achievement.unlocked_desc : achievement.locked_desc);
   var unlocked_at = $("<span>").addClass("unlocked_at").text(unlock_date(achievement.unlocked_at, achievement.flags))

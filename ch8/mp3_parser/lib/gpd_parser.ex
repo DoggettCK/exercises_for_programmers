@@ -1,4 +1,6 @@
 defmodule GpdParser do
+  use Bitwise
+
   def parse(file_name) do
     case File.read(file_name) do
       {:ok, gpd} ->
@@ -188,7 +190,7 @@ defmodule GpdParser do
 
 
     #IO.puts (flags |> Integer.to_string(2))
-    flags = parse_achievement_flags(<< flags::unsigned-integer-size(32) >>)
+    flags = parse_achievement_flags(flags)
 
     # TODO: convert unlock_time to timex date
     {
@@ -225,15 +227,13 @@ defmodule GpdParser do
     {:free_space, %{length: entry_length}, remaining_data}
   end
 
-  defp parse_achievement_flags(<< _::size(11), edited::size(1), _::size(2), earned::size(1), earned_online::size(1), _::size(12), show_unachieved::size(1), achievement_type::size(3) >>) do
-    Dict.merge %{
-      achievement_type: GpdEnums.achievement_type(achievement_type)
-    }, ([
-      edited: edited,
-      earned: earned,
-      earned_online: earned_online,
-      show_unachieved: show_unachieved
-    ] |> Enum.into(%{}, fn {k, v} -> {k, (if v == 1, do: true, else: false)} end))
+  defp parse_achievement_flags(flags) when is_integer(flags) do
+    GpdEnums.flags
+    |> Enum.map(&({&1, flags |> GpdEnums.flag_set?(&1)}))
+    |> Enum.into(%{
+      achievement_type: GpdEnums.achievement_type(flags &&& 0x7),
+      system_xbox: !(GpdEnums.flag_set?(flags, :system_ios_android_win8) || GpdEnums.flag_set?(flags, :system_gfwl_wp8))
+    })
   end
 
   defp parse_setting_data(%{:setting_id => 0x10040038, :id => 0x10040038, :data_type => 1, :data => data}) do
