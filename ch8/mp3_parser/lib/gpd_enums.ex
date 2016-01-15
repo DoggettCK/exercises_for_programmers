@@ -60,11 +60,14 @@ defmodule GpdEnums do
 
   def achievement_type(_), do: "Unknown achievement type"
 
-  @flags %{
-    0x8 => :secret,
+  @writable_flags %{
     0x10000 => :earned_online,
     0x20000 => :earned,
     0x100000 => :edited,
+  }
+
+  @flags Dict.merge @writable_flags, %{
+    0x8 => :secret,
     0x200000 => :system_gfwl_wp8,
     0x400000 => :system_ios_android_win8
   }
@@ -74,6 +77,11 @@ defmodule GpdEnums do
   """
   def flags, do: @flags |> Dict.values
 
+  @doc """
+  Returns a list of all writable achievement flags
+  """
+  def writable_flags, do: @writable_flags |> Dict.values
+
   for {flag, flag_name } <- @flags do
     @doc """
     Determines if a flag is set on an integer, specified by an atom from `GpdEnums.flags`
@@ -81,11 +89,20 @@ defmodule GpdEnums do
     Returns: `true` or `false`
     """
     def flag_set?(flags, unquote(flag_name)) when is_integer(flags), do: (flags &&& unquote(flag)) == unquote(flag)
+  end
 
+  for {flag, flag_name} <- @writable_flags do
     @doc """
-    Set or unset a flag on an integer, specified by an atom from `GpdEnums.flags`
+    Set or unset a flag on an integer, specified by an atom from `GpdEnums.writable_flags`
+
+    ## Examples:
+
+    iex> GpdEnums.set_flag(0b01001, :earned_online, 1) |> Integer.to_string(2)
+    "10000000000001001"
     """
     def set_flag(flags, unquote(flag_name), 0), do: flags &&& bnot(unquote(flag))
     def set_flag(flags, unquote(flag_name), 1), do: flags ||| unquote(flag)
+    def set_flag(flags, unquote(flag_name), false), do: flags |> set_flag(unquote(flag_name), 0) 
+    def set_flag(flags, unquote(flag_name), true), do: flags |> set_flag(unquote(flag_name), 1) 
   end
 end

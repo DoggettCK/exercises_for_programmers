@@ -188,11 +188,6 @@ defmodule GpdParser do
                                           |> :unicode.characters_to_binary({:utf16, :big}, :utf8)
                                           |> String.split(<<0>>)
 
-
-    #IO.puts (flags |> Integer.to_string(2))
-    flags = parse_achievement_flags(flags)
-
-    # TODO: convert unlock_time to timex date
     {
       :achievement,
       %{
@@ -200,7 +195,8 @@ defmodule GpdParser do
         image_id: image_id,
         gamerscore: gamerscore,
         unlocked_at: unlock_time,
-        flags: flags,
+        unlocked_time: TimeUtils.filetime_to_datetime(unlock_time),
+        flags: parse_achievement_flags(flags),
         name: name,
         unlocked_desc: unlocked_desc,
         locked_desc: locked_desc
@@ -228,6 +224,8 @@ defmodule GpdParser do
   end
 
   defp parse_achievement_flags(flags) when is_integer(flags) do
+    #IO.puts (flags |> Integer.to_string(2))
+
     GpdEnums.flags
     |> Enum.map(&({&1, flags |> GpdEnums.flag_set?(&1)}))
     |> Enum.into(%{

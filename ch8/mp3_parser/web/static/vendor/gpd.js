@@ -23,7 +23,7 @@ function build_achievement_node (gpd_id, achievement) {
   var name = $("<h4>").addClass("name").text(achievement.name + (achievement.flags.secret ? " (SECRET)" : ""));
   var gamerscore = $("<h4>").addClass("gamerscore").text(achievement.gamerscore + "GS");
   var desc = $("<span>").addClass("description").text(achievement.flags.earned ? achievement.unlocked_desc : achievement.locked_desc);
-  var unlocked_at = $("<span>").addClass("unlocked_at").text(unlock_date(achievement.unlocked_at, achievement.flags))
+  var unlocked_at = $("<span>").addClass("unlocked_at").text(unlock_date(achievement.unlocked_time, achievement.flags))
 
   return $("<div>").addClass("achievement").addClass(achievement.flags.earned ? "unlocked" : "locked").append(img, name, gamerscore, desc, unlocked_at);
 }
@@ -34,17 +34,9 @@ function unlock_date (unlocked_at, flags) {
   }
 
   if (flags.earned_online) {
-    return "Unlocked on " + filetime_as_string(unlocked_at);
+    return "Unlocked on " + moment(unlocked_at).format("dddd MMMM Do YYYY, hh:mm:ss.SSS A z");
   }
   else {
     return "Unlocked Offline";
   }
-}
-
-function filetime_as_string (ft) {
-  var s = "" + ft;
-  var ts = +s.substring(0, s.length-4);
-  var fsOffset = Date.UTC(1601, 0, 1);
-  var d = new Date(fsOffset + ts);
-  return moment(d).format("dddd MMMM Do YYYY, hh:mm:ss.SSS A z");
 }

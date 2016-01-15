@@ -35,7 +35,7 @@ defmodule Macros do
     end
 
     defp simple_frame(tag, json_name, transform) do
-      final_ast = quote do
+      quote do
         def parse_frame(data_dict, << unquote(tag), size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
           << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
 
@@ -44,10 +44,6 @@ defmodule Macros do
           parse_frame(data_dict |> Dict.put(unquote(json_name), value), remaining_frame_data)
         end
       end
-
-      IO.puts Macro.to_string(final_ast)
-
-      final_ast
     end
 
     defmacro text_frame(tag, json_name) do
