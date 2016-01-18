@@ -1,22 +1,52 @@
 defmodule ID3_v2_2_Parser do
   use Macros.ID3_v2_2
 
-  text_frame "TAL", "album"
-  text_frame "TCM", "composer"
-  text_frame "TDA", "date"
-  text_frame "TIM", "time"
-  text_frame "TP1", "lead_performer"
-  text_frame "TSS", "encoding_settings"
-  text_frame "TT2", "title"
-  text_frame "TYE", "year"
-  
+  text_frame "TAL", "Album/Movie/Show title"
+  text_frame "TBP", "BPM (Beats Per Minute)"
+  text_frame "TCM", "Composer"
+  text_frame "TCO", "Content type"
+  text_frame "TCR", "Copyright message"
+  text_frame "TDA", "Date"
+  text_frame "TDR", "Date Released"
+  text_frame "TDS", "Podcast Description"
+  text_frame "TDY", "Playlist delay"
+  text_frame "TEN", "Encoded by"
+  text_frame "TFT", "File type"
+  text_frame "TID", "ID"
+  text_frame "TIM", "Time"
+  text_frame "TKE", "Initial key"
+  text_frame "TLA", "Language(s)"
+  text_frame "TLE", "Length"
+  text_frame "TMT", "Media type"
+  text_frame "TOA", "Original artist(s)/performer(s)"
+  text_frame "TOF", "Original filename"
+  text_frame "TOL", "Original Lyricist(s)/text writer(s)"
+  text_frame "TOR", "Original release year"
+  text_frame "TOT", "Original album/Movie/Show title"
+  text_frame "TP1", "Lead artist(s)/Lead performer(s)/Soloist(s)/Performing group"
+  text_frame "TP2", "Band/Orchestra/Accompaniment"
+  text_frame "TP3", "Conductor/Performer refinement"
+  text_frame "TP4", "Interpreted, remixed, or otherwise modified by"
+  text_frame "TPA", "Part of a set"
+  text_frame "TPB", "Publisher"
+  text_frame "TRC", "ISRC (International Standard Recording Code)"
+  text_frame "TRD", "Recording dates"
+  text_frame "TRK", "Track number/Position in set"
+  text_frame "TSI", "Size"
+  text_frame "TSS", "Software/hardware and settings used for encoding"
+  text_frame "TT1", "Content group description"
+  text_frame "TT2", "Title/Songname/Content description"
+  text_frame "TT3", "Subtitle/Description refinement"
+  text_frame "TXT", "Lyricist/text writer"
+  text_frame "TXX", "User defined text information frame"
+  text_frame "TYE", "Year" 
+  text_frame "WFD", "Podcast URL" 
+
   # iTunes custom tags
   text_frame "TSA", "album_sort"
   text_frame "TSC", "composer_sort"
   text_frame "TSP", "artist_sort"
   text_frame "TST", "title_sort"
-
-  integer_frame "TBP", "beats_per_minute"
 
   def parse_frame(data_dict, << "COM", size::unsigned-integer-size(24), remaining_frame_data::binary >>) do
     << frame_data :: binary-size(size), remaining_frame_data :: binary >> = remaining_frame_data
@@ -32,6 +62,17 @@ defmodule ID3_v2_2_Parser do
     pictures = [parse_picture_frame(frame_data) | data_dict |> Dict.get("pictures", [])]
 
     parse_frame(data_dict |> Dict.put("pictures", pictures), remaining_frame_data)
+  end
+
+  def parse_frame(data_dict, << "PCS", size::unsigned-integer-size(24), remaining_frame_data::binary >>) do
+    << frame_data :: binary-size(size), remaining_frame_data :: binary >> = remaining_frame_data
+
+    value = case frame_data do
+      <<0, 0, 0, 0>> -> false
+      _ -> true
+    end
+    
+    parse_frame(data_dict |> Dict.put("podcast?", value), remaining_frame_data)
   end
 
   def parse_frame(data_dict, << 0, 0, 0, _::binary >>) do
@@ -63,7 +104,7 @@ defmodule ID3_v2_2_Parser do
 
   ### Comment frame parsing
   defp parse_comment_frame(<< 0, language::binary-size(3), comment_data::binary >>) do
-    [short_description, actual_text | _] = comment_data |> String.split(<<0>>)
+    [short_description, actual_text | _] = comment_data |> StringUtils.decode_string |> String.split(<<0>>)
 
     %{}
     |> Dict.put("encoding", "ISO-8859-1")
@@ -73,11 +114,7 @@ defmodule ID3_v2_2_Parser do
   end
 
   defp parse_comment_frame(<< 1, language::binary-size(3), comment_data::binary >>) do
-    # Reattach the encoding so the decoder can parse them correctly
-    [short_description, actual_text | _] = comment_data 
-                                            |> String.split(<<0, 0>>)
-                                            |> Enum.map(&(<<1>> <> &1))
-                                            |> Enum.map(&StringUtils.decode_string/1)
+    [short_description, actual_text | _] = comment_data |> StringUtils.decode_string |> String.split(<<0>>)
 
     %{}
     |> Dict.put("encoding", "UTF-8")

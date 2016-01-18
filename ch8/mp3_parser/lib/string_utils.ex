@@ -12,26 +12,17 @@ defmodule StringUtils do
     null_terminated_string(rest, s <> <<c>>) 
   end
 
-  # TODO: Rewrite these to use :unicode.characters_to_binary({:utf16, :big}, :utf8}, depending on input/output encoding
-  def decode_string(<<>>), do: ""
-  def decode_string(<< 0, str::binary >>) do
-    str |> String.split(<<0>>) |> hd # Remove trailling null if necessary
-  end
+  def decode_string(str) when is_binary(str) do
+    { encoding, bom_length } = :unicode.bom_to_encoding(str)
 
-  def decode_string(<< 1, 0xFF, 0xFE, str::binary >>) do
-    read_utf8_string(str)
-  end
+    << bom::binary-size(bom_length), str::binary >> = str
 
-  def decode_string(<< 1, 0xFE, 0xFF, str::binary >>) do
-    read_utf8_string(str)
-  end
-
-  def decode_string(<< 3, str::binary >>) do
-    str |> read_utf8_string
-  end
-
-
-  def read_utf8_string(str) do
-    str |> String.graphemes |> Enum.reject(&(&1 == <<0>>)) |> to_string
+    case encoding do
+      {:utf16, :big} -> :unicode.characters_to_binary(str, encoding, :utf8)
+      {:utf16, :little} -> :unicode.characters_to_binary(str, encoding, :utf8)
+      :latin1 -> :unicode.characters_to_binary(str, encoding, :utf8)
+      {:utf32, endianness} -> :unicode.characters_to_binary(<<0, 0>> <> str, {:utf16, endianness}, :utf8)
+      _ -> str
+    end
   end
 end

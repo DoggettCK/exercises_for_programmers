@@ -6,24 +6,14 @@ defmodule Macros do
       end
     end
 
-    defp simple_frame(tag, json_name, transform) do
+    defmacro text_frame(tag, json_name) do
       quote do
         def parse_frame(data_dict, << unquote(tag), size::unsigned-integer-size(24), remaining_frame_data::binary >>) do
           << frame_data :: binary-size(size), remaining_frame_data :: binary >> = remaining_frame_data
 
-          value = unquote(transform)
-
-          parse_frame(data_dict |> Dict.put(unquote(json_name), value), remaining_frame_data)
+          parse_frame(data_dict |> Dict.put(unquote(json_name), frame_data |> StringUtils.decode_string), remaining_frame_data)
         end
       end
-    end    
-
-    defmacro text_frame(tag, json_name) do
-      simple_frame(tag, json_name, quote(do: frame_data |> StringUtils.decode_string))
-    end
-
-    defmacro integer_frame(tag, json_name) do
-      simple_frame(tag, json_name, quote(do: frame_data |> StringUtils.decode_string |> String.to_integer))
     end    
   end
 
@@ -34,24 +24,16 @@ defmodule Macros do
       end
     end
 
-    defp simple_frame(tag, json_name, transform) do
+    defmacro text_frame(tag, json_name) do
       quote do
         def parse_frame(data_dict, << unquote(tag), size::unsigned-integer-size(32), _flags::binary-size(2), remaining_frame_data::binary >>) do
-          << frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
+          size = size - 1 # strip off encoding byte
 
-          value = unquote(transform)
+          << _encoding::binary-size(1), frame_data::binary-size(size), remaining_frame_data::binary >> = remaining_frame_data
 
-          parse_frame(data_dict |> Dict.put(unquote(json_name), value), remaining_frame_data)
+          parse_frame(data_dict |> Dict.put(unquote(json_name), frame_data |> StringUtils.decode_string), remaining_frame_data)
         end
       end
-    end
-
-    defmacro text_frame(tag, json_name) do
-      simple_frame(tag, json_name, quote(do: frame_data |> StringUtils.decode_string))
-    end
-
-    defmacro integer_frame(tag, json_name) do
-      simple_frame(tag, json_name, quote(do: frame_data |> StringUtils.decode_string |> String.to_integer))
     end
   end
 end
