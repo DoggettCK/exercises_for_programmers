@@ -20,7 +20,9 @@ defmodule Weather.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", Weather do
-  #   pipe_through :api
-  # end
+   scope "/api", Weather do
+     pipe_through :api
+
+     post "current_weather", WeatherController, :current
+   end
 end

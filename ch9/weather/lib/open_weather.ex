@@ -1,7 +1,7 @@
 defmodule OpenWeather do
   require URI
 
-  def temperature_of(location, format \\ :fahrenheit) do
+  def current_weather(location, format \\ :fahrenheit) do
     location
     |> URI.encode
     |> url_for_current_weather(Application.get_env(:weather, Weather.Endpoint) |> Keyword.get(:openweather_api_key))
@@ -55,43 +55,33 @@ defmodule OpenWeather do
     |> parse_current_weather(format)
   end
 
-  defp parse_response(_) do
-    :error
-  end
-
   defp parse_current_weather({:ok, json}, format) do
-    try do
-      IO.inspect json
+    temps = ["temp", "temp_max", "temp_min"]
+            |> Enum.map(&(Dict.get(json["main"], &1) |> to_temperature(format) |> temperature_to_string))
+            |> Enum.zip([:current, :max, :min])
+            |> Enum.into(%{}, fn {k, v} -> {v, k} end)
 
-      temps = ["temp", "temp_max", "temp_min"]
-      |> Enum.map(&(Dict.get(json["main"], &1) |> to_temperature(format) |> temperature_to_string))
-      |> Enum.zip([:current, :max, :min])
-      |> Enum.into(%{}, fn {k, v} -> {v, k} end)
+    sun = ["sunrise", "sunset"]
+          |> Enum.map(&({&1, Dict.get(json["sys"], &1)}))
+          |> Enum.into(%{})
 
-      sun = ["sunrise", "sunset"]
-      |> Enum.map(&({&1, Dict.get(json["sys"], &1)}))
-      |> Enum.into(%{})
+    location = json["name"]
+    humidity = json["main"]["humidity"]
+    pressure = json["main"]["pressure"]
+    wind_degrees = json["wind"]["deg"]
 
-      location = json["name"]
-      humidity = json["main"]["humidity"]
-      pressure = json["main"]["pressure"]
-      wind_degrees = json["wind"]["deg"]
+    current_weather = json["weather"] |> hd
 
-      current_weather = json["weather"] |> hd
-
-      {:ok, %{
-          temperature: temps,
-          location: location,
-          sun: sun,
-          humidity: "#{humidity}%",
-          pressure: "#{pressure} mbar",
-          icon: current_weather |> Dict.get("icon") |> icon_for,
-          conditions: current_weather |> Dict.get("description") |> String.capitalize,
-          wind: %{ direction: wind_degrees |> parse_wind_direction }
-        }}
-    rescue
-      _ -> :error
-    end
+    %{
+        temperature: temps,
+        location: location,
+        sun: sun,
+        humidity: "#{humidity}%",
+        pressure: "#{pressure} mbar",
+        icon: current_weather |> Dict.get("icon") |> icon_for,
+        conditions: current_weather |> Dict.get("description") |> String.capitalize,
+        wind: %{ direction: wind_degrees |> parse_wind_direction }
+      }
   end
   
   defp temperature_to_string({temp, sym}) do
