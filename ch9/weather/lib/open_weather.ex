@@ -1,20 +1,22 @@
 defmodule OpenWeather do
   require URI
 
-  def current_weather(location, format \\ :fahrenheit) do
+  def current_weather(location, units \\ :imperial) do
+    api_key = Application.get_env(:weather, Weather.Endpoint) |> Keyword.get(:openweather_api_key)
+
     location
     |> URI.encode
-    |> url_for_current_weather(Application.get_env(:weather, Weather.Endpoint) |> Keyword.get(:openweather_api_key))
+    |> url_for_current_weather(api_key, units)
     |> HTTPoison.get
-    |> parse_response(format)
+    |> parse_response(units)
   end
 
-  defp url_for_current_weather(encoded_location, app_id) do
-    "http://api.openweathermap.org/data/2.5/weather?q=#{encoded_location}&APPID=#{app_id}"
+  defp url_for_current_weather(encoded_location, app_id, units) do
+    "http://api.openweathermap.org/data/2.5/weather?q=#{encoded_location}&APPID=#{app_id}&units=#{units}"
   end
 
-  defp url_for_forecast(encoded_location, app_id) do
-    "http://api.openweathermap.org/data/2.5/forecast?q=#{encoded_location}&APPID=#{app_id}"
+  defp url_for_forecast(encoded_location, app_id, units) do
+    "http://api.openweathermap.org/data/2.5/forecast?q=#{encoded_location}&APPID=#{app_id}&units=#{units}"
   end
 
   defp icon_for(weather_icon_id) do
@@ -49,15 +51,16 @@ defmodule OpenWeather do
     |> Enum.at(index)
   end
 
-  defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}, format) do
+  defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}, units) do
     body
     |> JSON.decode
-    |> parse_current_weather(format)
+    |> parse_current_weather(units)
   end
 
-  defp parse_current_weather({:ok, json}, format) do
+  defp parse_current_weather({:ok, json}, units) do
+    IO.inspect json
     temps = ["temp", "temp_max", "temp_min"]
-            |> Enum.map(&(Dict.get(json["main"], &1) |> to_temperature(format) |> temperature_to_string))
+            |> Enum.map(&((Dict.get(json["main"], &1) + 0.0) |> temperature_to_string(units)))
             |> Enum.zip([:current, :max, :min])
             |> Enum.into(%{}, fn {k, v} -> {v, k} end)
 
@@ -69,6 +72,7 @@ defmodule OpenWeather do
     humidity = json["main"]["humidity"]
     pressure = json["main"]["pressure"]
     wind_degrees = json["wind"]["deg"]
+    wind_speed = json["wind"]["speed"] + 0.0
 
     current_weather = json["weather"] |> hd
 
@@ -80,15 +84,29 @@ defmodule OpenWeather do
         pressure: "#{pressure} mbar",
         icon: current_weather |> Dict.get("icon") |> icon_for,
         conditions: current_weather |> Dict.get("description") |> String.capitalize,
-        wind: %{ direction: wind_degrees |> parse_wind_direction }
+        wind: %{ 
+          direction: wind_degrees |> parse_wind_direction,
+          speed: wind_speed |> speed_to_string(units)
+        }
       }
   end
   
-  defp temperature_to_string({temp, sym}) do
+  defp temperature_to_string(temp, units) do
+    sym = case units do
+      :imperial -> "F"
+      :metric -> "C"
+      _ -> "K"
+    end
+
     "#{temp |> Float.round(1)}°#{sym}" 
   end
 
-  defp to_temperature(kelvin_temp, :celsius), do: {kelvin_temp - 273.15, "C"}
-  defp to_temperature(kelvin_temp, :fahrenheit), do: {(kelvin_temp - 273.15) * 1.8 + 32, "F"}    
-  defp to_temperature(kelvin_temp, _), do: {kelvin_temp, "K"}
+  def speed_to_string(speed, units) do
+    sym = case units do
+      :imperial -> "mph"
+      _ -> "m/s"
+    end
+
+    "#{speed |> Float.round(1)} #{sym}"
+  end
 end

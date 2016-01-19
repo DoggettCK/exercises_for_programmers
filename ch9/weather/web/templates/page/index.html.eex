@@ -5,9 +5,9 @@
     <input id="location" type="text"/>
   </div>
   <div class="row units">
-    <input type="radio" name="format" value="fahrenheit" checked="checked"><label for="format">Fahrenheit</label>
-    <input type="radio" name="format" value="celsius"><label for="format">Celsius</label>
-    <input type="radio" name="format" value="kelvin"><label for="format">Kelvin</label>
+    <input type="radio" name="units" value="imperial" checked="checked"><label for="units">Imperial</label>
+    <input type="radio" name="units" value="metric"><label for="units">Metric</label>
+    <input type="radio" name="units" value="standard"><label for="units">Standard</label>
   </div>
   <div class="row">
     <p id="weather"></p>
