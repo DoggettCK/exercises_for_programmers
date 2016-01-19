@@ -1,29 +1,29 @@
 <div id="weather_report" class="jumbotron">
   <h2>Weather Report</h2>
   <div id="location_row" class="row">
-    <div class="col-md-4">
+    <div class="col-md-5 right">
       <label for="location">Location</label>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7 left">
       <input id="location" type="text"/>
     </div>
   </div>
   <div id="units_row" class="row">
-    <div class="col-md-4">
+    <div class="col-md-5 right">
       <label for="units">Units</label>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7 left">
       <div class="row">
-        <div class="col-md-1 col-md-offset-4"><input type="radio" name="units" value="imperial" checked="checked"></div>
-        <div class="col-md-4 left"><label for="units">Imperial</label></div>
+        <div class="col-md-1"><input type="radio" name="units" value="imperial" checked="checked"></div>
+        <div class="col-md-6 left"><label for="units">Imperial</label></div>
       </div>
       <div class="row">
-        <div class="col-md-1 col-md-offset-4"><input type="radio" name="units" value="metric"></div>
-        <div class="col-md-4 left"><label for="units">Metric</label></div>
+        <div class="col-md-1"><input type="radio" name="units" value="metric"></div>
+        <div class="col-md-6 left"><label for="units">Metric</label></div>
       </div>
       <div class="row">
-        <div class="col-md-1 col-md-offset-4"><input type="radio" name="units" value="standard"></div>
-        <div class="col-md-4 left"><label for="units">Standard</label></div>
+        <div class="col-md-1"><input type="radio" name="units" value="standard"></div>
+        <div class="col-md-6 left"><label for="units">Standard</label></div>
       </div>
     </div>
   </div>

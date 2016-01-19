@@ -27,8 +27,13 @@
 #weather img {
   width: 100px;
   height: 100px;
+  vertical-align: text-middle;
 }
 
-#units_row div.left {
+div.right {
+  text-align: right;
+}
+
+div.left {
   text-align: left;
 }

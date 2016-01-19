@@ -9,14 +9,13 @@ var GetCurrentWeather = function() {
     units: units
   }, function(weather_data) {
     var location = $("<h3>")
-      .attr({"id": "location", "class": "row"})
+      .attr({"class": "row"})
       .text( weather_data.location + " Weather");
 
-    var conditions_img = $("<img>").attr({"class": "conditions", "src": weather_data.icon});
-
-    var conditions = $("<div>")
-      .attr({"id": "conditions"})
-      .text(weather_data.conditions);
+    var conditions = $("<div>").attr({"class": "row"})
+      .append(
+          $("<p>").text(weather_data.conditions)
+          .append($("<img>").attr({"src": weather_data.icon})));
 
     var current_temperature = $("<div>")
       .attr({"id": "current_temp", "class": "row"})
@@ -66,7 +65,7 @@ var GetCurrentWeather = function() {
           $("<label>").text("Pressure"),
           $("<span>").text(weather_data.pressure));
 
-    $("#weather").empty().append(location, conditions_img, conditions, current_temperature, min_temperature, max_temperature, sunrise, sunset, wind, humidity, pressure);
+    $("#weather").empty().append(location, conditions, current_temperature, min_temperature, max_temperature, sunrise, sunset, wind, humidity, pressure);
   });
 };
 
