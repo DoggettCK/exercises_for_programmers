@@ -8,8 +8,65 @@ var GetCurrentWeather = function() {
     location: location,
     units: units
   }, function(weather_data) {
-    // TODO: Finish displaying weather
-    alert(JSON.stringify(weather_data))
+    var location = $("<div>")
+      .attr({"id": "location"})
+      .text( weather_data.location + " Weather");
+
+    var conditions_img = $("<img>").attr({"class": "conditions", "src": weather_data.icon});
+
+    var conditions = $("<div>")
+      .attr({"id": "conditions"})
+      .text(weather_data.conditions);
+
+    var current_temperature = $("<div>")
+      .attr({"id": "current_temp", "class": "temperature"})
+      .append(
+          $("<label>").text("Current Temperature"),
+          $("<span>").text(weather_data.temperature.current));
+
+    var min_temperature = $("<div>")
+      .attr({"id": "min_temp", "class": "temperature"})
+      .append(
+          $("<label>").text("Low"),
+          $("<span>").text(weather_data.temperature.min));
+
+    var max_temperature = $("<div>")
+      .attr({"id": "max_temp", "class": "temperature"})
+      .append(
+          $("<label>").text("High"),
+          $("<span>").text(weather_data.temperature.max));
+
+    var sunrise = $("<div>")
+      .attr({"id": "sunrise"})
+      .append(
+          $("<label>").text("Sunrise"),
+          $("<span>").text(moment(weather_data.sun.sunrise * 1000).format("hh:mm:ss A")));
+
+    var sunset = $("<div>")
+      .attr({"id": "sunset"})
+      .append(
+          $("<label>").text("Sunset"),
+          $("<span>").text(moment(weather_data.sun.sunset * 1000).format("hh:mm:ss A")));
+
+    var wind = $("<div>")
+      .attr({"id": "wind"})
+      .append(
+          $("<label>").text("Wind"),
+          $("<span>").text(weather_data.wind.speed + " " + weather_data.wind.direction));
+
+    var humidity = $("<div>")
+      .attr({"id": "humidity"})
+      .append(
+          $("<label>").text("Humidity"),
+          $("<span>").text(weather_data.humidity));
+
+    var pressure = $("<div>")
+      .attr({"id": "pressure"})
+      .append(
+          $("<label>").text("Pressure"),
+          $("<span>").text(weather_data.pressure));
+
+    $("#weather").empty().append(location, conditions_img, conditions, current_temperature, min_temperature, max_temperature, sunrise, sunset, wind, humidity, pressure);
   });
 };
 
