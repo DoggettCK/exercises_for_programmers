@@ -1,0 +1,34 @@
+#weather_report {
+  padding-top: 1em;
+}
+
+#weather_report h2 {
+  margin-bottom: 1em;
+  text-decoration: underline;
+}
+
+#weather_report #location_row {
+  margin-bottom: 0.5em;
+}
+
+#weather {
+  width: 100%;
+  margin-top: 1em;
+}
+
+#weather label {
+  float: left;
+}
+
+#weather span {
+  float: right;
+}
+
+#weather img {
+  width: 100px;
+  height: 100px;
+}
+
+#units_row div.left {
+  text-align: left;
+}

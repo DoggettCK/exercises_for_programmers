@@ -8,8 +8,8 @@ var GetCurrentWeather = function() {
     location: location,
     units: units
   }, function(weather_data) {
-    var location = $("<div>")
-      .attr({"id": "location"})
+    var location = $("<h3>")
+      .attr({"id": "location", "class": "row"})
       .text( weather_data.location + " Weather");
 
     var conditions_img = $("<img>").attr({"class": "conditions", "src": weather_data.icon});
@@ -19,49 +19,49 @@ var GetCurrentWeather = function() {
       .text(weather_data.conditions);
 
     var current_temperature = $("<div>")
-      .attr({"id": "current_temp", "class": "temperature"})
+      .attr({"id": "current_temp", "class": "row"})
       .append(
           $("<label>").text("Current Temperature"),
           $("<span>").text(weather_data.temperature.current));
 
     var min_temperature = $("<div>")
-      .attr({"id": "min_temp", "class": "temperature"})
+      .attr({"id": "min_temp", "class": "row"})
       .append(
           $("<label>").text("Low"),
           $("<span>").text(weather_data.temperature.min));
 
     var max_temperature = $("<div>")
-      .attr({"id": "max_temp", "class": "temperature"})
+      .attr({"id": "max_temp", "class": "row"})
       .append(
           $("<label>").text("High"),
           $("<span>").text(weather_data.temperature.max));
 
     var sunrise = $("<div>")
-      .attr({"id": "sunrise"})
+      .attr({"id": "sunrise", "class": "row"})
       .append(
           $("<label>").text("Sunrise"),
           $("<span>").text(moment(weather_data.sun.sunrise * 1000).format("hh:mm:ss A")));
 
     var sunset = $("<div>")
-      .attr({"id": "sunset"})
+      .attr({"id": "sunset", "class": "row"})
       .append(
           $("<label>").text("Sunset"),
           $("<span>").text(moment(weather_data.sun.sunset * 1000).format("hh:mm:ss A")));
 
     var wind = $("<div>")
-      .attr({"id": "wind"})
+      .attr({"id": "wind", "class": "row"})
       .append(
           $("<label>").text("Wind"),
           $("<span>").text(weather_data.wind.speed + " " + weather_data.wind.direction));
 
     var humidity = $("<div>")
-      .attr({"id": "humidity"})
+      .attr({"id": "humidity", "class": "row"})
       .append(
           $("<label>").text("Humidity"),
           $("<span>").text(weather_data.humidity));
 
     var pressure = $("<div>")
-      .attr({"id": "pressure"})
+      .attr({"id": "pressure", "class": "row"})
       .append(
           $("<label>").text("Pressure"),
           $("<span>").text(weather_data.pressure));

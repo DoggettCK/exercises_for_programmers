@@ -58,7 +58,6 @@ defmodule OpenWeather do
   end
 
   defp parse_current_weather({:ok, json}, units) do
-    IO.inspect json
     temps = ["temp", "temp_max", "temp_min"]
             |> Enum.map(&((Dict.get(json["main"], &1) + 0.0) |> temperature_to_string(units)))
             |> Enum.zip([:current, :max, :min])
