@@ -1,0 +1,28 @@
+<h2>Listing urls</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Url</th>
+      <th>Ip</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for url <- @urls do %>
+    <tr>
+      <td><%= url.url %></td>
+      <td><%= url.ip %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: url_path(@conn, :show, url), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: url_path(@conn, :edit, url), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: url_path(@conn, :delete, url), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New url", to: url_path(@conn, :new) %>

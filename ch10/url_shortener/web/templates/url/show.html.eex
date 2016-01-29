@@ -1,0 +1,18 @@
+<h2>Show url</h2>
+
+<ul>
+
+  <li>
+    <strong>Url:</strong>
+    <%= @url.url %>
+  </li>
+
+  <li>
+    <strong>Ip:</strong>
+    <%= @url.ip %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: url_path(@conn, :edit, @url) %>
+<%= link "Back", to: url_path(@conn, :index) %>
