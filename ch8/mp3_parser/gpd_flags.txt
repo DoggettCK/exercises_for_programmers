@@ -2,7 +2,7 @@ d: edited
 e: earned
 o: earned online
 t: type
-x: show unachieved
+x: show as secret if not yet achieved
 
 Wordament
 =========

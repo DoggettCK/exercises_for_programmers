@@ -1,0 +1,2 @@
+defmodule GpdAchievementEntry do
+end
