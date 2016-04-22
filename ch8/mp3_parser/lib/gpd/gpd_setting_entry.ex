@@ -79,7 +79,6 @@ defmodule GpdSettingEntry do
 
     def inspect(%GpdSettingEntry{} = entry, _opts) do
       concat ["#GpdSettingEntry<",
-        # TODO: Setting id to atom
         "#{GpdConstants.setting_name(entry.id)} (0x#{entry.id})",
         "\tData: #{inspect_data(entry.data_type, entry.data)}",
         "\tLast Edited: #{entry.last_edited |> TimeUtils.to_human_readable}",

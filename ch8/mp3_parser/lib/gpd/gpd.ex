@@ -84,11 +84,15 @@ defmodule Gpd do
     |> Enum.reduce(gpd, &parse_entry/2)
   end
 
-  defp parse_entry(%GpdEntry{namespace: @ns_achievement} = entry, %Gpd{} = gpd), do: GpdAchievementEntry.parse_entry(entry, gpd)
-  defp parse_entry(%GpdEntry{namespace: @ns_image} = entry, %Gpd{} = gpd), do: GpdImageEntry.parse_entry(entry, gpd)
-  defp parse_entry(%GpdEntry{namespace: @ns_setting} = entry, %Gpd{} = gpd), do: GpdSettingEntry.parse_entry(entry, gpd)
-  defp parse_entry(%GpdEntry{namespace: @ns_title} = entry, %Gpd{} = gpd), do: GpdTitleEntry.parse_entry(entry, gpd)
-  defp parse_entry(%GpdEntry{namespace: @ns_string} = entry, %Gpd{} = gpd), do: GpdStringEntry.parse_entry(entry, gpd)
+  for {namespace, parser} <- %{
+    @ns_achievement => GpdAchievementEntry,
+    @ns_image => GpdImageEntry,
+    @ns_setting => GpdSettingEntry,
+    @ns_title => GpdTitleEntry,
+    @ns_string =>  GpdStringEntry,
+  } do
+    defp parse_entry(%GpdEntry{namespace: unquote(namespace)} = entry, %Gpd{} = gpd), do: unquote(parser).parse_entry(entry, gpd)
+  end
 
   # Base entry for anything I missed
   defp parse_entry(%GpdEntry{length: len} = entry, %Gpd{remaining_data: data} = gpd) do
