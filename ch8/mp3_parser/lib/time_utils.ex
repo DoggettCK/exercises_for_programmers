@@ -28,6 +28,13 @@ defmodule TimeUtils do
     "#{pad_left(year, 4)}-#{pad_left(month, 2)}-#{pad_left(day, 2)} #{pad_left(hour, 2)}:#{pad_left(minute, 2)}:#{pad_left(second, 2)}.#{pad_left(millisecond, 3)}"
   end
 
+  def to_human_readable(filetime) do
+    filetime
+    |> filetime_to_datetime
+    |> datetime_to_tuples
+    |> tuples_to_iso8601
+  end
+
   defp pad_left(int, min_length, pad \\ ?0, base \\ 10) do
     int
     |> Integer.to_string(base)
