@@ -21,7 +21,7 @@ defmodule GpdAchievementEntry do
       image: image_id,
       gamerscore: gamerscore,
       flags: GpdAchievementFlags.parse(flags),
-      unlock_time: unlock_time,
+      unlock_time: unlock_time |> TimeUtils.to_human_readable,
       name: name,
       unlocked_desc: unlocked,
       locked_desc: locked

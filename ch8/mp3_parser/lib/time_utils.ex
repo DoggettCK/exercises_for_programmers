@@ -1,17 +1,15 @@
 defmodule TimeUtils do
-  epoch = {{1970, 1, 1}, {0, 0, 0}}
-  @epoch_seconds :calendar.datetime_to_gregorian_seconds(epoch)
+  @epoch_seconds :calendar.datetime_to_gregorian_seconds({{1970, 1, 1}, {0, 0, 0}})
+  @ms_filetime_offset 116444736000000000
 
   def filetime_to_datetime(filetime) do
-    div(filetime - ms_filetime_offset, 10000)
+    div(filetime - @ms_filetime_offset, 10000)
   end
 
   def datetime_to_filetime(datetime) do
-    ms_filetime_offset + (datetime * 10000)
+    @ms_filetime_offset + (datetime * 10000)
   end
   
-  defp ms_filetime_offset, do: 116444736000000000
-
   def to_human_readable(filetime) do
     datetime = filetime_to_datetime(filetime)
 

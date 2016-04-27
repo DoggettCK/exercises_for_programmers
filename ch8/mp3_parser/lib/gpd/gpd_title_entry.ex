@@ -63,12 +63,17 @@ defmodule GpdTitleEntry do
     }
   end
 
-  def parse_entry(%GpdEntry{length: len, id: id}, %Gpd{remaining_data: data} = gpd) when id in [@sync_data, @sync_list] do
-    << _entry_data::binary-size(len), remaining_data::binary >> = data
+  # Sync list/data are special
+  def parse_entry(%GpdEntry{id: @sync_list, length: len}, %Gpd{remaining_data: data} = gpd) do
+    << entry_data::binary-size(len), remaining_data::binary >> = data
 
-    IO.puts "TODO: Title sync entry for 0x#{id |> Integer.to_string(16)}"
+    %Gpd{ gpd | title_sync_list: GpdSyncEntry.parse_sync_list(entry_data), remaining_data: remaining_data }
+  end
 
-    %Gpd{ gpd | remaining_data: remaining_data }
+  def parse_entry(%GpdEntry{id: @sync_data, length: len}, %Gpd{remaining_data: data} = gpd) do
+    << entry_data::binary-size(len), remaining_data::binary >> = data
+
+    %Gpd{ gpd | title_sync_data: GpdSyncData.parse(entry_data), remaining_data: remaining_data }
   end
 
   def parse_entry(%GpdEntry{length: len}, %Gpd{remaining_data: data} = gpd) do
